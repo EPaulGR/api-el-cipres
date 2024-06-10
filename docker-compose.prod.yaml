@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  cipresapp:
+    depends_on:
+      - db
+    build: 
+      context: .
+      dockerfile: dockerfile
+    image: cipres-docker
+    container_name: cipresapp
+    restart: always # reiniciar el contenedor si se detiene
+    ports:
+      - "${PORT}:${PORT}"
+    # working_dir: /var/www/cipres
+    environment:
+      MONGODB: ${MONGODB}
+      PORT: ${PORT}
+      DEFAULT_LIMIT: ${DEFAULT_LIMIT}
+    # volumes:
+    #   - ./:/var/www/cipres
+
+  db:
+    image: mongo:5
+    container_name: mongo-cipres
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      MONGODB_DATABASE: nest-cipres
+    volumes:
+      - ./mongo:/data/db
