@@ -1,4 +1,4 @@
-import { IsString, MinLength } from 'class-validator';
+import { IsOptional, IsString, MinLength } from 'class-validator';
 
 export class CreateClienteDto {
   @IsString()
@@ -13,8 +13,8 @@ export class CreateClienteDto {
   @MinLength(1)
   codigo_identificacion: string;
 
+  @IsOptional()
   @IsString()
-  @MinLength(1)
   rfn: string;
 
   @IsString()

@@ -7,12 +7,49 @@ export class Cliente extends Document {
     unique: true,
     index: true,
   })
-  name: string;
+  nombre: string;
+
   @Prop({
     unique: true,
     index: true,
   })
-  no: number;
+  curp: string;
+
+  @Prop({
+    unique: true,
+    index: true,
+  })
+  codigo_identificacion: string;
+
+  @Prop({
+    unique: false,
+    index: true,
+  })
+  rfn: string;
+
+  @Prop({
+    unique: false,
+    index: true,
+  })
+  domicilio: string;
+
+  @Prop({
+    unique: false,
+    index: true,
+  })
+  poblacion: string;
+
+  @Prop({
+    unique: false,
+    index: true,
+  })
+  municipio: string;
+
+  @Prop({
+    unique: false,
+    index: true,
+  })
+  entidad: string;
 }
 
 export const ClienteSchema = SchemaFactory.createForClass(Cliente);

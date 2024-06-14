@@ -21,25 +21,25 @@ export class ClientesController {
   @Post()
   create(@Body() createClienteDto: CreateClienteDto) {
     return this.clientesService.create(createClienteDto);
-  }
+  } // listo
 
   @Get()
   findAll(@Query() paginationDto: PaginationDto) {
     return this.clientesService.findAll(paginationDto);
-  }
+  } // listo
 
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.clientesService.findOne(id);
-  }
+  } // listo
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateClienteDto: UpdateClienteDto) {
     return this.clientesService.update(id, updateClienteDto);
-  }
+  } // listo
 
   @Delete(':id')
   remove(@Param('id', ParseMongoIdPipe) id: string) {
     return this.clientesService.remove(id);
-  }
+  } // listo
 }

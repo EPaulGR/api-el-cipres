@@ -63,8 +63,8 @@ export class ClientesService {
     return cliente;
   }
 
-  async update(term: string, updateClienteDto: UpdateClienteDto) {
-    const cliente = await this.findOne(term);
+  async update(id: string, updateClienteDto: UpdateClienteDto) {
+    const cliente = await this.findOne(id);
     if (updateClienteDto.nombre) {
       updateClienteDto.nombre = updateClienteDto.nombre.toLowerCase();
     }
@@ -81,7 +81,9 @@ export class ClientesService {
     if (deletedCount === 0) {
       throw new BadRequestException(`Cliente not found with id_ ${id}`);
     }
-    return `This action removes a #${id} cliente`;
+    return {
+      message: `This action removes a #${id} cliente`,
+    };
   }
 
   // Functions
