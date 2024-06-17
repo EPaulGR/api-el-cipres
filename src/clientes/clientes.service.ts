@@ -19,7 +19,7 @@ export class ClientesService {
     private readonly clienteModel: Model<Cliente>,
     private readonly configService: ConfigService,
   ) {
-    this.defaultLimit = configService.get<number>('defaultLimit');
+    this.defaultLimit = this.configService.get<number>('defaultLimit');
   }
 
   async create(createClienteDto: CreateClienteDto) {

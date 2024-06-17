@@ -8,6 +8,11 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { EnvConfiguration } from './config/env.config';
 import { JoiValidationSchema } from './config/joi.validation';
+import { VehiculosModule } from './vehiculos/vehiculos.module';
+import { TiposMaderaModule } from './tipos-madera/tipos-madera.module';
+import { MedidasMaderaModule } from './medidas-madera/medidas-madera.module';
+import { PersonalModule } from './personal/personal.module';
+import { GasolinerasModule } from './gasolineras/gasolineras.module';
 
 @Module({
   imports: [
@@ -23,6 +28,11 @@ import { JoiValidationSchema } from './config/joi.validation';
     }),
     CommonModule,
     ClientesModule,
+    VehiculosModule,
+    TiposMaderaModule,
+    MedidasMaderaModule,
+    PersonalModule,
+    GasolinerasModule,
   ],
 })
 export class AppModule {}
