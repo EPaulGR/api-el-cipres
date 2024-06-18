@@ -1,26 +1,98 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { CreateGasolineraDto } from './dto/create-gasolinera.dto';
 import { UpdateGasolineraDto } from './dto/update-gasolinera.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Gasolinera } from './entities/gasolinera.entity';
+import { Model, isValidObjectId } from 'mongoose';
+import { ConfigService } from '@nestjs/config';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Injectable()
 export class GasolinerasService {
-  create(createGasolineraDto: CreateGasolineraDto) {
-    return 'This action adds a new gasolinera';
+  private defaultLimit: number;
+  constructor(
+    @InjectModel(Gasolinera.name)
+    private readonly gasolineraModel: Model<Gasolinera>,
+    private readonly configService: ConfigService,
+  ) {
+    this.defaultLimit = this.configService.get<number>('defaultLimit');
   }
 
-  findAll() {
-    return `This action returns all gasolineras`;
+  async create(createGasolineraDto: CreateGasolineraDto) {
+    try {
+      const gasolinera = await this.gasolineraModel.create(createGasolineraDto);
+      return gasolinera;
+    } catch (error) {
+      this.handleExceptions(error);
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} gasolinera`;
+  findAll(paginationDto: PaginationDto) {
+    const { limit = this.defaultLimit, offset = 0 } = paginationDto;
+    return this.gasolineraModel
+      .find()
+      .limit(limit)
+      .skip(offset)
+      .sort({ no: 1 })
+      .select('-__v');
   }
 
-  update(id: number, updateGasolineraDto: UpdateGasolineraDto) {
-    return `This action updates a #${id} gasolinera`;
+  async findOne(term: string) {
+    let gasolinera: Gasolinera;
+    if (!isNaN(+term)) {
+      gasolinera = await this.gasolineraModel.findOne({ no: term });
+    }
+    // Mongo ID
+    if (!gasolinera && isValidObjectId(term)) {
+      gasolinera = await this.gasolineraModel.findById(term);
+    }
+    // Name
+    if (!gasolinera) {
+      gasolinera = await this.gasolineraModel.findOne({
+        name: term.toLowerCase().trim(),
+      });
+    }
+    if (!gasolinera) {
+      throw new BadRequestException(`Gasolinera not found with id_ ${term}`);
+    }
+    return gasolinera;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} gasolinera`;
+  async update(id: string, updateGasolineraDto: UpdateGasolineraDto) {
+    if (updateGasolineraDto.nombre) {
+      updateGasolineraDto.nombre = updateGasolineraDto.nombre.toLowerCase();
+    }
+    const gasolinera = await this.findOne(id);
+    try {
+      await gasolinera.updateOne(updateGasolineraDto);
+      return { ...gasolinera.toJSON(), ...updateGasolineraDto };
+    } catch (error) {
+      this.handleExceptions(error);
+    }
+  }
+
+  async remove(id: string) {
+    const { deletedCount } = await this.gasolineraModel.deleteOne({ _id: id });
+    if (deletedCount === 0) {
+      throw new BadRequestException(`Gasolinera not found with id_ ${id}`);
+    }
+    return {
+      message: `This action removes a #${id} gasolinera`,
+    };
+  }
+
+  // Functions
+  private handleExceptions(error: any) {
+    if (error.code === 11000) {
+      throw new BadRequestException(
+        `Gasolinera already exists ${JSON.stringify(error.keyValue)}`,
+      );
+    }
+    console.log(error);
+    throw new InternalServerErrorException(`Can't create gasolinera ${error}`);
   }
 }

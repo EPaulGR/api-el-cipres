@@ -23,7 +23,6 @@ export class ClientesService {
   }
 
   async create(createClienteDto: CreateClienteDto) {
-    createClienteDto.nombre = createClienteDto.nombre.toLowerCase();
     try {
       const cliente = await this.clienteModel.create(createClienteDto);
       return cliente;

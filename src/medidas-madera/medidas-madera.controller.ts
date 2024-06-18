@@ -1,7 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { MedidasMaderaService } from './medidas-madera.service';
 import { CreateMedidasMaderaDto } from './dto/create-medidas-madera.dto';
 import { UpdateMedidasMaderaDto } from './dto/update-medidas-madera.dto';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Controller('medidas-madera')
 export class MedidasMaderaController {
@@ -13,22 +23,25 @@ export class MedidasMaderaController {
   }
 
   @Get()
-  findAll() {
-    return this.medidasMaderaService.findAll();
-  }
+  findAll(@Query() paginationDto: PaginationDto) {
+    return this.medidasMaderaService.findAll(paginationDto);
+  } // listo
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.medidasMaderaService.findOne(+id);
+    return this.medidasMaderaService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMedidasMaderaDto: UpdateMedidasMaderaDto) {
-    return this.medidasMaderaService.update(+id, updateMedidasMaderaDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateMedidasMaderaDto: UpdateMedidasMaderaDto,
+  ) {
+    return this.medidasMaderaService.update(id, updateMedidasMaderaDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.medidasMaderaService.remove(+id);
+    return this.medidasMaderaService.remove(id);
   }
 }
