@@ -1,26 +1,95 @@
-import { Injectable } from '@nestjs/common';
-import { CreateTiposMaderaDto } from './dto/create-tipos-madera.dto';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { UpdateTiposMaderaDto } from './dto/update-tipos-madera.dto';
+import { CreateTiposMaderaDto } from './dto/create-tipos-madera.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { TiposMadera } from './entities/tipos-madera.entity';
+import { Model, isValidObjectId } from 'mongoose';
+import { ConfigService } from '@nestjs/config';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Injectable()
 export class TiposMaderaService {
-  create(createTiposMaderaDto: CreateTiposMaderaDto) {
-    return 'This action adds a new tiposMadera';
+  private defaultLimit: number;
+  constructor(
+    @InjectModel(TiposMadera.name)
+    private readonly tipoMaderaModel: Model<TiposMadera>,
+    private readonly configService: ConfigService,
+  ) {
+    this.defaultLimit = this.configService.get<number>('defaultLimit');
   }
 
-  findAll() {
-    return `This action returns all tiposMadera`;
+  async create(createTipoMaderaDto: CreateTiposMaderaDto) {
+    try {
+      const tipoMadera = await this.tipoMaderaModel.create(createTipoMaderaDto);
+      return tipoMadera;
+    } catch (error) {
+      this.handleExceptions(error);
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} tiposMadera`;
+  findAll(paginationDto: PaginationDto) {
+    const { limit = this.defaultLimit, offset = 0 } = paginationDto;
+    return this.tipoMaderaModel
+      .find()
+      .limit(limit)
+      .skip(offset)
+      .sort({ no: 1 })
+      .select('-__v');
   }
 
-  update(id: number, updateTiposMaderaDto: UpdateTiposMaderaDto) {
-    return `This action updates a #${id} tiposMadera`;
+  async findOne(term: string) {
+    let tipoMadera: TiposMadera;
+    if (!isNaN(+term)) {
+      tipoMadera = await this.tipoMaderaModel.findOne({ no: term });
+    }
+    // Mongo ID
+    if (!tipoMadera && isValidObjectId(term)) {
+      tipoMadera = await this.tipoMaderaModel.findById(term);
+    }
+    // Name
+    if (!tipoMadera) {
+      tipoMadera = await this.tipoMaderaModel.findOne({
+        name: term.toLowerCase().trim(),
+      });
+    }
+    if (!tipoMadera) {
+      throw new BadRequestException(`Tipo madera not found with id_ ${term}`);
+    }
+    return tipoMadera;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} tiposMadera`;
+  async update(id: string, updateTipoMaderaDto: UpdateTiposMaderaDto) {
+    const tipoMadera = await this.findOne(id);
+    try {
+      await tipoMadera.updateOne(updateTipoMaderaDto);
+      return { ...tipoMadera.toJSON(), ...updateTipoMaderaDto };
+    } catch (error) {
+      this.handleExceptions(error);
+    }
+  }
+
+  async remove(id: string) {
+    const { deletedCount } = await this.tipoMaderaModel.deleteOne({ _id: id });
+    if (deletedCount === 0) {
+      throw new BadRequestException(`Tipo madera not found with id_ ${id}`);
+    }
+    return {
+      message: `This action removes a #${id} tipo madera`,
+    };
+  }
+
+  // Functions
+  private handleExceptions(error: any) {
+    if (error.code === 11000) {
+      throw new BadRequestException(
+        `Tipo madera already exists ${JSON.stringify(error.keyValue)}`,
+      );
+    }
+    console.log(error);
+    throw new InternalServerErrorException(`Can't create tipo madera ${error}`);
   }
 }
