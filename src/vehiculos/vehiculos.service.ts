@@ -32,9 +32,20 @@ export class VehiculosService {
   }
 
   findAll(paginationDto: PaginationDto) {
-    const { limit = this.defaultLimit, offset = 0 } = paginationDto;
+    const { limit = this.defaultLimit, offset = 0, busqueda } = paginationDto;
+    let filter = {};
+    if (busqueda) {
+      filter = {
+        $or: [
+          { medio_transporte: { $regex: busqueda, $options: 'i' } }, // Si tienes un campo "nombre"
+          { placas: { $regex: busqueda, $options: 'i' } }, // Si tienes un campo "nombre"
+          { marca: { $regex: busqueda, $options: 'i' } }, // Si tienes un campo "nombre"
+          // Agrega más campos según sea necesario
+        ],
+      };
+    }
     return this.vehiculoModel
-      .find()
+      .find(filter)
       .limit(limit)
       .skip(offset)
       .sort({ no: 1 })

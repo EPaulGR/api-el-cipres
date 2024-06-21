@@ -32,9 +32,18 @@ export class TiposMaderaService {
   }
 
   findAll(paginationDto: PaginationDto) {
-    const { limit = this.defaultLimit, offset = 0 } = paginationDto;
+    const { limit = this.defaultLimit, offset = 0, busqueda } = paginationDto;
+    let filter = {};
+    if (busqueda) {
+      filter = {
+        $or: [
+          { nombre: { $regex: busqueda, $options: 'i' } }, // Si tienes un campo "nombre"
+          // Agrega más campos según sea necesario
+        ],
+      };
+    }
     return this.tipoMaderaModel
-      .find()
+      .find(filter)
       .limit(limit)
       .skip(offset)
       .sort({ no: 1 })
