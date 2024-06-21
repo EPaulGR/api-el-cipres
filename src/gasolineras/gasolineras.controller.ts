@@ -11,8 +11,8 @@ import {
 import { GasolinerasService } from './gasolineras.service';
 import { CreateGasolineraDto } from './dto/create-gasolinera.dto';
 import { UpdateGasolineraDto } from './dto/update-gasolinera.dto';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { ParseMongoIdPipe } from 'src/common/pipes/parse-mongo-id.pipe';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Controller('gasolineras')
 export class GasolinerasController {

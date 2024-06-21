@@ -1,15 +1,16 @@
-import { Prop, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
+@Schema()
 export class Gasolinera extends Document {
   @Prop({
-    unique: false,
+    unique: true,
     index: true,
   })
   nombre: string;
 
   @Prop({
-    unique: false,
+    unique: true,
     index: true,
   })
   direccion: string;
@@ -18,7 +19,7 @@ export class Gasolinera extends Document {
     unique: true,
     index: true,
   })
-  telefono: number;
+  telefono: string;
 }
 
 export const GasolineraSchema = SchemaFactory.createForClass(Gasolinera);

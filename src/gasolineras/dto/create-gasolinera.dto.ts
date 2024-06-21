@@ -1,4 +1,5 @@
-import { IsNumber, IsPositive, IsString, MinLength } from 'class-validator';
+import { IsString, MinLength } from 'class-validator';
+
 export class CreateGasolineraDto {
   @IsString()
   @MinLength(1)
@@ -8,7 +9,7 @@ export class CreateGasolineraDto {
   @MinLength(1)
   direccion: string;
 
-  @IsNumber()
-  @IsPositive()
-  telefono: number;
+  @IsString()
+  @MinLength(1)
+  telefono: string;
 }

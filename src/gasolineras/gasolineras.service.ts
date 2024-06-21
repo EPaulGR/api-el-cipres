@@ -5,11 +5,11 @@ import {
 } from '@nestjs/common';
 import { CreateGasolineraDto } from './dto/create-gasolinera.dto';
 import { UpdateGasolineraDto } from './dto/update-gasolinera.dto';
-import { InjectModel } from '@nestjs/mongoose';
 import { Gasolinera } from './entities/gasolinera.entity';
 import { Model, isValidObjectId } from 'mongoose';
-import { ConfigService } from '@nestjs/config';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { ConfigService } from '@nestjs/config';
+import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 export class GasolinerasService {
@@ -30,7 +30,6 @@ export class GasolinerasService {
       this.handleExceptions(error);
     }
   }
-
   findAll(paginationDto: PaginationDto) {
     const { limit = this.defaultLimit, offset = 0 } = paginationDto;
     return this.gasolineraModel
@@ -63,10 +62,10 @@ export class GasolinerasService {
   }
 
   async update(id: string, updateGasolineraDto: UpdateGasolineraDto) {
+    const gasolinera = await this.findOne(id);
     if (updateGasolineraDto.nombre) {
       updateGasolineraDto.nombre = updateGasolineraDto.nombre.toLowerCase();
     }
-    const gasolinera = await this.findOne(id);
     try {
       await gasolinera.updateOne(updateGasolineraDto);
       return { ...gasolinera.toJSON(), ...updateGasolineraDto };
