@@ -13,6 +13,7 @@ import { TiposMaderaModule } from './tipos-madera/tipos-madera.module';
 import { MedidasMaderaModule } from './medidas-madera/medidas-madera.module';
 import { PersonalModule } from './personal/personal.module';
 import { GasolinerasModule } from './gasolineras/gasolineras.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { GasolinerasModule } from './gasolineras/gasolineras.module';
     MedidasMaderaModule,
     PersonalModule,
     GasolinerasModule,
+    AuthModule,
   ],
 })
 export class AppModule {}
