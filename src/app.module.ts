@@ -14,6 +14,7 @@ import { MedidasMaderaModule } from './medidas-madera/medidas-madera.module';
 import { PersonalModule } from './personal/personal.module';
 import { GasolinerasModule } from './gasolineras/gasolineras.module';
 import { AuthModule } from './auth/auth.module';
+import { RemisionesModule } from './remisiones/remisiones.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { AuthModule } from './auth/auth.module';
     PersonalModule,
     GasolinerasModule,
     AuthModule,
+    RemisionesModule,
   ],
 })
 export class AppModule {}
