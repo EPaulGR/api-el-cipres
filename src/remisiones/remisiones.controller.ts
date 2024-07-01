@@ -18,6 +18,12 @@ import { ResponseRemisionDto } from './dto/response-remision.dto';
 export class RemisionesController {
   constructor(private readonly remisionesService: RemisionesService) {}
 
+  // la puse arriba porque podría interceptar la petición de /last con :id
+  @Get('last')
+  async findLast(): Promise<ResponseRemisionDto> {
+    return this.remisionesService.findLast();
+  }
+
   @Post()
   create(@Body() createRemisionDto: CreateRemisionDto) {
     return this.remisionesService.create(createRemisionDto);
@@ -26,11 +32,6 @@ export class RemisionesController {
   @Get()
   findAll(@Query() paginationDto: PaginationDto) {
     return this.remisionesService.findAll(paginationDto);
-  }
-
-  @Get('last')
-  async findLast(): Promise<ResponseRemisionDto> {
-    return this.remisionesService.findLast();
   }
 
   @Get(':id')

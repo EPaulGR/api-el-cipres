@@ -161,7 +161,7 @@ export class RemisionesService {
     const { _id, createdAt, updatedAt, ...rest } = remision.toObject();
     return {
       ...rest,
-      id: _id.toString(),
+      _id: _id.toString(),
       createdAt,
       updatedAt,
     };

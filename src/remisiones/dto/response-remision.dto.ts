@@ -1,7 +1,7 @@
 import { Types } from 'mongoose';
 
 export class ResponseRemisionDto {
-  id: string;
+  _id: string;
   folio: number;
   registro_siem: string;
   curp: string;
