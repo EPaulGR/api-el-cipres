@@ -17,6 +17,11 @@ export class CreateRemisionDto {
   @MinLength(1)
   registro_siem: string;
 
+  // Datos formales del titular
+  @IsString()
+  @MinLength(1)
+  curp: string;
+
   @IsString()
   @MinLength(1)
   fecha_expedicion: string;
@@ -55,6 +60,9 @@ export class CreateRemisionDto {
   volumen: number;
 
   @IsString()
+  medida: string;
+
+  @IsString()
   @MinLength(1)
   cantidad_letra: string;
 
@@ -65,7 +73,7 @@ export class CreateRemisionDto {
 
   @IsNumber()
   @IsPositive()
-  candida_amparada: number;
+  cantidad_amparada: number;
 
   @IsNumber()
   @IsPositive()

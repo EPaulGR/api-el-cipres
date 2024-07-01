@@ -1,13 +1,16 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 
-@Schema()
+@Schema({ timestamps: true })
 export class Remision extends Document {
   @Prop({ unique: true, index: true })
   folio: number;
 
   @Prop({ unique: false, index: true })
   registro_siem: string;
+
+  @Prop({ unique: false, index: true })
+  curp: string;
 
   @Prop({ unique: false, index: true })
   fecha_expedicion: string;
@@ -37,13 +40,16 @@ export class Remision extends Document {
   volumen: number;
 
   @Prop({ unique: false, index: true })
+  medida: string;
+
+  @Prop({ unique: false, index: true })
   cantidad_letra: string;
 
   @Prop({ unique: false, index: true })
   saldo_disponible: number;
 
   @Prop({ unique: false, index: true })
-  candida_amparada: number;
+  cantidad_amparada: number;
 
   @Prop({ unique: false, index: true })
   saldo_siguiente: number;

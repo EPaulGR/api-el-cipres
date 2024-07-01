@@ -12,6 +12,7 @@ import { RemisionesService } from './remisiones.service';
 import { CreateRemisionDto } from './dto/create-remision.dto';
 import { UpdateRemisionDto } from './dto/update-remision.dto';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { ResponseRemisionDto } from './dto/response-remision.dto';
 
 @Controller('remisiones')
 export class RemisionesController {
@@ -27,8 +28,13 @@ export class RemisionesController {
     return this.remisionesService.findAll(paginationDto);
   }
 
+  @Get('last')
+  async findLast(): Promise<ResponseRemisionDto> {
+    return this.remisionesService.findLast();
+  }
+
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: string): Promise<ResponseRemisionDto> {
     return this.remisionesService.findOne(id);
   }
 
